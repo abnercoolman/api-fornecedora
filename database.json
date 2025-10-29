@@ -1,0 +1,189 @@
+{
+  "institution": {
+    "id": "if_001",
+    "name": "bnk_001",
+    "status": true
+  },
+  "apiKeys": {
+    "app_openfinance_001": "key_app_management_001",
+    "app_internal_001": "key_app_internal_001"
+  },
+  "customers": [
+    {
+      "_id": "cus_001",
+      "name": "Maria Silva",
+      "cpf": "12345678900",
+      "email": "maria.silva@email.com",
+      "accounts": [
+        "acc_001",
+        "acc_002"
+      ]
+    },
+    {
+      "_id": "cus_002",
+      "name": "João Santos",
+      "cpf": "98765432100",
+      "email": "joao.santos@email.com",
+      "accounts": [
+        "acc_003"
+      ]
+    },
+    {
+      "_id": "cus_003",
+      "name": "João Silva",
+      "cpf": "52998224725",
+      "email": "joao@example.com",
+      "accounts": [
+        "acc_004"
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "_id": "acc_001",
+      "type": "credit-card",
+      "branch": "0001",
+      "number": "12345-6",
+      "balance": -1500.75,
+      "creditCardLimit": 5000,
+      "transactions": [
+        "txn_001",
+        "txn_002"
+      ]
+    },
+    {
+      "_id": "acc_002",
+      "type": "checking",
+      "branch": "0001",
+      "number": "12345-7",
+      "balance": 2500,
+      "transactions": [
+        "txn_003"
+      ]
+    },
+    {
+      "_id": "acc_003",
+      "type": "credit-card",
+      "branch": "0002",
+      "number": "54321-0",
+      "balance": -800,
+      "creditCardLimit": 3000,
+      "transactions": [
+        "txn_004"
+      ]
+    },
+    {
+      "type": "checking",
+      "branch": "0001",
+      "number": "12345",
+      "balance": 1000,
+      "customerId": "cus_003",
+      "transactions": [],
+      "_id": "acc_004"
+    }
+  ],
+  "transactions": [
+    {
+      "_id": "txn_001",
+      "date": "2025-01-15",
+      "description": "Compra no supermercado",
+      "amount": 150,
+      "currentInstallment": 2,
+      "totalInstallments": 6,
+      "type": "debit",
+      "category": "Food"
+    },
+    {
+      "_id": "txn_002",
+      "date": "2025-01-16",
+      "description": "Pagamento da fatura",
+      "amount": 500,
+      "currentInstallment": 1,
+      "totalInstallments": 1,
+      "type": "credit",
+      "category": "Payment"
+    },
+    {
+      "_id": "txn_003",
+      "date": "2025-01-17",
+      "description": "Transferência recebida",
+      "amount": 1000,
+      "currentInstallment": 1,
+      "totalInstallments": 1,
+      "type": "credit",
+      "category": "Transfer"
+    },
+    {
+      "_id": "txn_004",
+      "date": "2025-01-18",
+      "description": "Compra em loja online",
+      "amount": 800,
+      "currentInstallment": 1,
+      "totalInstallments": 3,
+      "type": "debit",
+      "category": "Shopping"
+    }
+  ],
+  "consents": [
+    {
+      "_id": "consent_001",
+      "customerId": "cus_001",
+      "clientAppId": "app_management_001",
+      "permissions": [
+        "accounts",
+        "transactions"
+      ],
+      "status": "active",
+      "createdAt": "2025-01-15T10:30:00Z",
+      "expiresAt": "2025-12-15T10:30:00Z"
+    },
+    {
+      "_id": "consent_002",
+      "customerId": "cus_002",
+      "clientAppId": "app_management_001",
+      "permissions": [
+        "accounts",
+        "transactions"
+      ],
+      "status": "active",
+      "createdAt": "2025-01-16T14:30:00Z",
+      "expiresAt": "2025-12-16T14:30:00Z"
+    },
+    {
+      "customerId": "cus_003",
+      "clientAppId": "app_management_001",
+      "permissions": [
+        "accounts",
+        "transactions"
+      ],
+      "status": "revoked",
+      "createdAt": "2025-10-25T22:54:27.380Z",
+      "expiresAt": "2026-04-25T22:54:27.380Z",
+      "_id": "con_1761432867381_m2dgtxfwz"
+    },
+    {
+      "customerId": "cus_003",
+      "clientAppId": "app_management_001",
+      "permissions": [
+        "accounts",
+        "transactions"
+      ],
+      "status": "revoked",
+      "createdAt": "2025-10-25T22:56:48.257Z",
+      "expiresAt": "2026-04-25T22:56:48.257Z",
+      "_id": "con_1761433008258_iv9uito5c"
+    },
+    {
+      "customerId": "cus_003",
+      "clientAppId": "app_management_001",
+      "permissions": [
+        "accounts",
+        "transactions"
+      ],
+      "status": "revoked",
+      "createdAt": "2025-10-25T22:57:30.574Z",
+      "expiresAt": "2026-04-25T22:57:30.574Z",
+      "_id": "con_1761433050575_hsrj8k7hk"
+    }
+  ]
+}
