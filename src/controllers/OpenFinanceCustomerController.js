@@ -9,8 +9,13 @@ class OpenFinanceCustomerController {
 
     async getById(req, res) {
         try {
-            // Verifica se o consentimento tem permissão para acessar dados do cliente
-            if (!req.consent || req.consent.customerId !== req.params.id) {
+            // Busca consentimento ativo para este cliente e aplicação
+            const consent = await this.consentModel.findActiveByCustomerAndApp(
+                req.params.id,
+                req.clientAppId
+            );
+
+            if (!consent) {
                 return res
                     .status(403)
                     .json({
@@ -35,8 +40,13 @@ class OpenFinanceCustomerController {
 
     async getAccounts(req, res) {
         try {
-            // Verifica se o consentimento tem permissão para acessar contas
-            if (!req.consent || req.consent.customerId !== req.params.id) {
+            // Busca consentimento ativo para este cliente e aplicação
+            const consent = await this.consentModel.findActiveByCustomerAndApp(
+                req.params.id,
+                req.clientAppId
+            );
+
+            if (!consent) {
                 return res
                     .status(403)
                     .json({
@@ -44,7 +54,7 @@ class OpenFinanceCustomerController {
                     });
             }
 
-            if (!req.consent.permissions.includes("accounts")) {
+            if (!consent.permissions.includes("accounts")) {
                 return res
                     .status(403)
                     .json({

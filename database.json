@@ -128,7 +128,7 @@
     {
       "_id": "consent_001",
       "customerId": "cus_001",
-      "clientAppId": "app_management_001",
+      "clientAppId": "app_openfinance_001",
       "permissions": [
         "accounts",
         "transactions"

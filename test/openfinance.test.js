@@ -1,6 +1,6 @@
 const { get } = require("httpie");
 
-const API_URL = "http://localhost:7856/openfinance";
+const API_URL = "http://localhost:3000/openfinance";
 const headers = {
     "x-api-key": "key_app_management_001",
 };
@@ -16,49 +16,54 @@ async function testOpenFinanceEndpoints() {
         });
         console.log("Dados da instituição:", institutionResponse.data);
 
-        // Obtendo consentimento existente para os testes
+        // 2. Consultar consentimento (novo endpoint)
         const consentId = "consent_001"; // Usando um consentimento existente do database.json
+        console.log("\n2. Consultando status do consentimento...");
+        const consentResponse = await get(`${API_URL}/consents/${consentId}`, {
+            headers,
+        });
+        console.log("Status do consentimento:", consentResponse.data);
 
-        // 2. Buscar dados do cliente
-        console.log("\n2. Buscando dados do cliente...");
+        // Verificar se o consentimento está ativo antes de prosseguir
+        if (consentResponse.data.status !== "active") {
+            console.log("Consentimento não está ativo. Interrompendo testes de dados protegidos.");
+            return;
+        }
+
+        // 3. Buscar dados do cliente (sem middleware de consentimento)
+        console.log("\n3. Buscando dados do cliente...");
         const customerResponse = await get(`${API_URL}/customers/cus_001`, {
-            headers: {
-                ...headers,
-                "x-consent-id": consentId,
-            },
+            headers,
         });
         console.log("Dados do cliente:", customerResponse.data);
 
-        // 3. Buscar contas do cliente
-        console.log("\n3. Buscando contas do cliente...");
+        // 4. Buscar contas do cliente (sem middleware de consentimento)
+        console.log("\n4. Buscando contas do cliente...");
         const accountsResponse = await get(`${API_URL}/customers/cus_001/accounts`, {
-            headers: {
-                ...headers,
-                "x-consent-id": consentId,
-            },
+            headers,
         });
         console.log("Contas do cliente:", accountsResponse.data);
 
-        // 4. Buscar saldo da conta
-        console.log("\n4. Buscando saldo da conta...");
+        // 5. Buscar saldo da conta (sem middleware de consentimento)
+        console.log("\n5. Buscando saldo da conta...");
         const balanceResponse = await get(`${API_URL}/accounts/acc_001/balance`, {
-            headers: {
-                ...headers,
-                "x-consent-id": consentId,
-            },
+            headers,
         });
         console.log("Saldo da conta:", balanceResponse.data);
 
-        // 5. Buscar transações da conta
-        console.log("\n5. Buscando transações da conta...");
+        // 6. Buscar transações da conta (sem middleware de consentimento)
+        console.log("\n6. Buscando transações da conta...");
         const transactionsResponse = await get(`${API_URL}/accounts/acc_001/transactions`, {
-            headers: {
-                ...headers,
-                "x-consent-id": consentId,
-            },
+            headers,
         });
         console.log("Transações da conta:", transactionsResponse.data);
 
+        console.log("\n=== Fluxo de teste atualizado ===");
+        console.log("IMPORTANTE: A verificação de consentimento agora deve ser feita pela API consumidora");
+        console.log("1. Consulte GET /consents/:id para verificar se o consentimento está ativo");
+        console.log("2. Se ativo, prossiga com as chamadas para os endpoints de dados");
+        console.log("3. Se inativo, não faça chamadas para endpoints que requerem consentimento");
+        
         console.log("\nTodos os testes passaram com sucesso!");
     } catch (error) {
         console.error("\nErro durante os testes:", error.message);

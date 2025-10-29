@@ -27,8 +27,13 @@ class OpenFinanceAccountController {
                     .json({ error: "Cliente não encontrado" });
             }
 
-            // Verifica se o consentimento tem permissão para acessar a conta
-            if (!req.consent || req.consent.customerId !== customer._id) {
+            // Busca consentimento ativo para este cliente e aplicação
+            const consent = await this.consentModel.findActiveByCustomerAndApp(
+                customer._id,
+                req.clientAppId
+            );
+
+            if (!consent) {
                 return res
                     .status(403)
                     .json({
@@ -36,7 +41,7 @@ class OpenFinanceAccountController {
                     });
             }
 
-            if (!req.consent.permissions.includes("accounts")) {
+            if (!consent.permissions.includes("accounts")) {
                 return res
                     .status(403)
                     .json({
@@ -69,8 +74,13 @@ class OpenFinanceAccountController {
                     .json({ error: "Cliente não encontrado" });
             }
 
-            // Verifica se o consentimento tem permissão para acessar transações
-            if (!req.consent || req.consent.customerId !== customer._id) {
+            // Busca consentimento ativo para este cliente e aplicação
+            const consent = await this.consentModel.findActiveByCustomerAndApp(
+                customer._id,
+                req.clientAppId
+            );
+
+            if (!consent) {
                 return res
                     .status(403)
                     .json({
@@ -78,7 +88,7 @@ class OpenFinanceAccountController {
                     });
             }
 
-            if (!req.consent.permissions.includes("transactions")) {
+            if (!consent.permissions.includes("transactions")) {
                 return res
                     .status(403)
                     .json({
