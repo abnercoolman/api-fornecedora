@@ -66,6 +66,33 @@ class OpenFinanceConsentController {
         }
     }
 
+    async getAll(req, res) {
+        try {
+            const allConsents = await this.consentModel.getAll();
+            
+            // Filtra apenas os consentimentos da aplicação que está fazendo a requisição
+            // e que estão ativos e não expirados
+            const validConsents = allConsents.filter(consent => 
+                consent.clientAppId === req.clientAppId &&
+                consent.status === "active" &&
+                new Date(consent.expiresAt) > new Date()
+            );
+
+            // Retorna apenas as informações básicas necessárias
+            const consentsList = validConsents.map(consent => ({
+                _id: consent._id,
+                customerId: consent.customerId,
+                permissions: consent.permissions,
+                createdAt: consent.createdAt,
+                expiresAt: consent.expiresAt
+            }));
+
+            res.json(consentsList);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     async getById(req, res) {
         try {
             const consent = await this.consentModel.getById(req.params.id);

@@ -43,7 +43,38 @@ Todas as rotas públicas requerem:
     }
     ```
 
-2. **Consulta de Consentimento**
+2. **Listagem de Consentimentos**
+
+    ```
+    GET /consents
+    ```
+
+    - Lista todos os consentimentos ativos para a aplicação
+    - Retorna informações básicas dos consentimentos válidos (ativos e não expirados)
+    - Requer apenas API Key (não necessita de consentimento)
+    - Filtra automaticamente por `clientAppId` baseado na API Key
+    - Exemplo de resposta:
+
+    ```json
+    [
+        {
+            "_id": "consent_001",
+            "customerId": "cus_001",
+            "permissions": ["accounts", "transactions"],
+            "createdAt": "2025-01-15T10:00:00Z",
+            "expiresAt": "2025-07-15T10:00:00Z"
+        },
+        {
+            "_id": "consent_002",
+            "customerId": "cus_002",
+            "permissions": ["accounts"],
+            "createdAt": "2025-01-14T15:30:00Z",
+            "expiresAt": "2025-07-14T15:30:00Z"
+        }
+    ]
+    ```
+
+3. **Consulta de Consentimento**
 
     ```
     GET /consents/:consentId
@@ -66,7 +97,7 @@ Todas as rotas públicas requerem:
     }
     ```
 
-3. **Dados do Cliente**
+4. **Dados do Cliente**
 
     ```
     GET /customers/:customerId
@@ -84,7 +115,7 @@ Todas as rotas públicas requerem:
     }
     ```
 
-4. **Contas do Cliente**
+5. **Contas do Cliente**
 
     ```
     GET /customers/:customerId/accounts
@@ -111,7 +142,7 @@ Todas as rotas públicas requerem:
     ]
     ```
 
-5. **Saldo da Conta**
+6. **Saldo da Conta**
 
     ```
     GET /accounts/:accountId/balance
@@ -129,7 +160,7 @@ Todas as rotas públicas requerem:
     }
     ```
 
-6. **Transações da Conta**
+7. **Transações da Conta**
     ```
     GET /accounts/:accountId/transactions
     ```
@@ -190,31 +221,38 @@ const headers = {
     - Verifica se retorna os dados de identificação da instituição
     - Valida autenticação apenas com API Key (sem necessidade de consentimento)
 
-2. **Consulta de Consentimento**
+2. **Listagem de Consentimentos**
+
+    - Testa a rota GET /consents
+    - Verifica se lista todos os consentimentos ativos para a aplicação
+    - Valida filtragem automática por clientAppId baseado na API Key
+    - Conta e exibe o número de consentimentos ativos encontrados
+
+3. **Consulta de Consentimento**
 
     - Testa a rota GET /consents/:consentId
     - Verifica se retorna os dados do consentimento e seu status
     - Valida que a API consumidora pode verificar o status antes de fazer outras chamadas
 
-3. **Busca de Dados do Cliente**
+4. **Busca de Dados do Cliente**
 
     - Testa a rota GET /customers/:customerId
     - Verifica se retorna os dados básicos do cliente
     - Valida verificação interna de consentimento ativo
 
-4. **Busca de Contas do Cliente**
+5. **Busca de Contas do Cliente**
 
     - Testa a rota GET /customers/:customerId/accounts
     - Verifica se lista todas as contas associadas ao cliente
     - Valida verificação interna de consentimento com permissão "accounts"
 
-5. **Busca de Saldo da Conta**
+6. **Busca de Saldo da Conta**
 
     - Testa a rota GET /accounts/:accountId/balance
     - Verifica se retorna informações de saldo e limites
     - Valida verificação interna de consentimento com permissão "accounts"
 
-6. **Busca de Transações da Conta**
+7. **Busca de Transações da Conta**
     - Testa a rota GET /accounts/:accountId/transactions
     - Verifica se lista o histórico de transações
     - Valida verificação interna de consentimento com permissão "transactions"
@@ -228,32 +266,39 @@ npm run test:openfinance
 ```
 
 ### Dados de Teste
+
 Os testes utilizam dados pré-configurados no arquivo `database.json`:
-- Cliente: cus_001 (Maria Silva)
-- Contas: acc_001 (cartão) e acc_002 (corrente)
-- Consentimento: consent_001 (ativo, associado a app_openfinance_001)
-- API Key: key_app_management_001 (mapeada para app_openfinance_001)
+
+-   Cliente: cus_001 (Maria Silva)
+-   Contas: acc_001 (cartão) e acc_002 (corrente)
+-   Consentimento: consent_001 (ativo, associado a app_openfinance_001)
+-   API Key: key_app_management_001 (mapeada para app_openfinance_001)
 
 ## Nova Arquitetura de Verificação de Consentimento
 
 ### Fluxo Recomendado para API Consumidora
-1. **Verificar Status do Consentimento**: Fazer chamada para `GET /consents/:id` para verificar se o consentimento está ativo
-2. **Se Ativo**: Prosseguir com chamadas para endpoints de dados (customers, accounts)
-3. **Se Inativo**: Não fazer chamadas para endpoints protegidos e tratar adequadamente
+
+1. **Listar Consentimentos Ativos** (opcional): Fazer chamada para `GET /consents` para obter lista de todos os consentimentos ativos
+2. **Verificar Status do Consentimento**: Fazer chamada para `GET /consents/:id` para verificar se um consentimento específico está ativo
+3. **Se Ativo**: Prosseguir com chamadas para endpoints de dados (customers, accounts)
+4. **Se Inativo**: Não fazer chamadas para endpoints protegidos e tratar adequadamente
 
 ### Verificação Interna nos Controladores
-- Cada endpoint protegido usa o método `findActiveByCustomerAndApp` do modelo Consent
-- Verifica se existe consentimento ativo para o `customerId` e `clientAppId`
-- Valida permissões específicas quando necessário ("accounts", "transactions")
-- Retorna erro 403 se o consentimento não for válido
+
+-   Cada endpoint protegido usa o método `findActiveByCustomerAndApp` do modelo Consent
+-   Verifica se existe consentimento ativo para o `customerId` e `clientAppId`
+-   Valida permissões específicas quando necessário ("accounts", "transactions")
+-   Retorna erro 403 se o consentimento não for válido
 
 ### Benefícios da Nova Arquitetura
-- **Responsabilidade Clara**: API consumidora gerencia o fluxo de consentimento
-- **Segurança Dupla**: Verificação tanto na API consumidora quanto na fornecedora
-- **Flexibilidade**: Permite diferentes estratégias de cache e otimização na API consumidora
-- **Manutenibilidade**: Código mais limpo sem middleware complexo
+
+-   **Responsabilidade Clara**: API consumidora gerencia o fluxo de consentimento
+-   **Segurança Dupla**: Verificação tanto na API consumidora quanto na fornecedora
+-   **Flexibilidade**: Permite diferentes estratégias de cache e otimização na API consumidora
+-   **Manutenibilidade**: Código mais limpo sem middleware complexo
 
 ## Observações Importantes
+
 1. Todas as rotas públicas requerem autenticação via API Key
 2. A verificação de consentimento é feita internamente pelos controladores
 3. API consumidora deve verificar status do consentimento antes de fazer chamadas

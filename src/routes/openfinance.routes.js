@@ -18,6 +18,9 @@ router.use(verifyApiKey);
 // Rota de identificação da instituição (requer apenas API Key)
 router.get("/institution", (req, res) => institutionController.getInstitutionData(req, res));
 
+// Rota para listagem de consentimentos (requer apenas API Key)
+router.get("/consents", (req, res) => consentController.getAll(req, res));
+
 // Rota para consulta de consentimento (requer apenas API Key)
 router.get("/consents/:id", (req, res) => consentController.getById(req, res));
 
