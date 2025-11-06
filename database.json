@@ -11,9 +11,9 @@
   "customers": [
     {
       "_id": "cus_001",
-      "name": "Maria Silva",
-      "cpf": "12345678900",
-      "email": "maria.silva@email.com",
+      "name": "Tester",
+      "cpf": "51869958004",
+      "email": "tester.user@test.com",
       "accounts": [
         "acc_001",
         "acc_002"
@@ -140,7 +140,7 @@
     {
       "_id": "consent_002",
       "customerId": "cus_002",
-      "clientAppId": "app_management_001",
+      "clientAppId": "app_openfinance_001",
       "permissions": [
         "accounts",
         "transactions"

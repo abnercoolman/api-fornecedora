@@ -1,5 +1,5 @@
 const config = {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 7856,
     database: {
         path: "database.json",
     },

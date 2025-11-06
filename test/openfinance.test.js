@@ -1,6 +1,6 @@
 const { get } = require("httpie");
 
-const API_URL = "http://localhost:3000/openfinance";
+const API_URL = "http://localhost:7856/openfinance";
 const headers = {
     "x-api-key": "key_app_management_001",
 };
