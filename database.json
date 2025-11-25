@@ -85,7 +85,7 @@
   "transactions": [
     {
       "_id": "txn_001",
-      "date": "2025-01-15",
+      "date": "2025-11-15",
       "description": "Compra no supermercado",
       "amount": 150,
       "currentInstallment": 2,
@@ -95,7 +95,7 @@
     },
     {
       "_id": "txn_002",
-      "date": "2025-01-16",
+      "date": "2025-10-16",
       "description": "Pagamento da fatura",
       "amount": 500,
       "currentInstallment": 1,
@@ -105,7 +105,7 @@
     },
     {
       "_id": "txn_003",
-      "date": "2025-01-17",
+      "date": "2025-11-17",
       "description": "Transferência recebida",
       "amount": 1000,
       "currentInstallment": 1,
@@ -115,7 +115,7 @@
     },
     {
       "_id": "txn_004",
-      "date": "2025-01-18",
+      "date": "2025-11-18",
       "description": "Compra em loja online",
       "amount": 800,
       "currentInstallment": 1,
